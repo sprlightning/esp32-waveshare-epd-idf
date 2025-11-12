@@ -1,13 +1,13 @@
 /*****************************************************************************
 * | File      	:	Debug.h
-* | Author      :   Waveshare team
+* | Author      :   Waveshare team; MLX
 * | Function    :	debug with printf
 * | Info        :
 *   Image scanning
 *      Please use progressive scanning to generate images or fonts
 *----------------
 * |	This version:   V1.0
-* | Date        :   2018-01-11
+* | Date        :   2025-11-13
 * | Info        :   Basic version
 *
 ******************************************************************************/

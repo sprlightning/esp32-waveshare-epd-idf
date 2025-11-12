@@ -1,11 +1,11 @@
 /*****************************************************************************
 * | File      	:   DEV_Config.h
-* | Author      :   Waveshare team
+* | Author      :   Waveshare team; MLX
 * | Function    :   Hardware underlying interface
 * | Info        :
 *----------------
 * |	This version:   V1.0
-* | Date        :   2020-02-19
+* | Date        :   2025-11-13
 * | Info        :
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,6 +46,7 @@
  * GPIO config
 **/
 #if defined(USE_GxEPD)
+// for GoodDisplay's ESP32-L
 #ifndef SPI_HOST_TYPE
 // GD's ESP32-L supports hardware VSPI
 #define SPI_HOST_TYPE VSPI_HOST
@@ -57,6 +58,7 @@
 #define EPD_DC_PIN   T6
 #define EPD_BUSY_PIN T4
 #else
+// for waveshare's e-Paper ESP32 Driver Board
 #define EPD_SCK_PIN  13
 #define EPD_MOSI_PIN 14
 #define EPD_CS_PIN   15

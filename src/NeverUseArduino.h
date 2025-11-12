@@ -5,7 +5,7 @@
 * | Info        :
 *----------------
 * |	This version:   V1.0
-* | Date        :   2025-11-12
+* | Date        :   2025-11-13
 * | Info        :
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -31,7 +31,7 @@
 #define _NEVERUSEARDUINO_H_
 
 #define NO_ARDUINO (1) // 如果仅使用ESP-IDF，需打开此定义
-#define USE_GxEPD (1) // 如果使用GoodDisplay的ESP32-L。需打开此定义
+#define USE_GxEPD (1)  // 如果使用GoodDisplay的ESP32-L，需打开此定义
 
 
 #if defined(NO_ARDUINO)
@@ -39,6 +39,9 @@
 #include "driver/spi_master.h"
 #include "driver/i2c.h"
 #include "driver/gpio.h"
+#else
+#include "Arduino.h"
+#include "Wire.h"
 #endif
 
 #if defined(USE_GxEPD)
