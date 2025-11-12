@@ -19,12 +19,12 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 ### Step 1
 
-将整个esp32-waveshare-epd-idf文件夹复制到你的IDF项目的components文件夹中，在项目main目录的CMakeLists.txt中添加对esp32-waveshare-epd-idf的依赖；值得注意的是，本项目的前置需求是[pschatzmann](https://github.com/pschatzmann)的[arduino-audio-tools](https://github.com/pschatzmann/arduino-audio-tools)，其内置的NoArduino.h使用ESP-IDF方法重构了Arduino基本函数，使得非Arduino项目能在不引入Arduino组件的情况下使用Arduino的基本函数，例如常用的延时、IO操作、串口打印等；下面是main目录的CMakeLists.txt示例：
+将整个esp32-waveshare-epd-idf文件夹复制到你的IDF项目的components文件夹中（或者用git获取），在项目main目录的CMakeLists.txt中添加对esp32-waveshare-epd-idf的依赖；值得注意的是，本项目的前置需求是[pschatzmann](https://github.com/pschatzmann)的[arduino-audio-tools](https://github.com/pschatzmann/arduino-audio-tools)，其内置的NoArduino.h使用ESP-IDF方法重构了Arduino基本函数，使得非Arduino项目能在不引入Arduino组件的情况下使用Arduino的基本函数，例如常用的延时、IO操作、串口打印等；下面是main目录的CMakeLists.txt示例：
 
 ```cmake
     idf_component_register(SRCS "main.cpp"
                             INCLUDE_DIRS "."
-                            REQUIRES esp32-waveshare-epd-idf)
+                            REQUIRES arduino-audio-tools esp32-waveshare-epd-idf)
 ```
 
 ### Step 2
@@ -33,7 +33,7 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 ### Step 3
 
-参考demo，在你的main.cpp中引入对应屏幕的demo头文件，其setup的内容放到main.cpp的app_main()中即可，如果loop()有内容，那就创建一个task()，把loop()的内容放到task里并在app_main()末尾调用启动任务调度器启动此task()即可。
+参考demo的ino文件，将其所用的头文件放到到你的main.cpp中，demo的setup()的内容放到main.cpp的app_main()中即可，如果loop()有内容，那就创建一个task()，把loop()的内容放到task()里，并在app_main()末尾调用启动任务调度器启动此task()即可。
 
 ### 注意事项
 
