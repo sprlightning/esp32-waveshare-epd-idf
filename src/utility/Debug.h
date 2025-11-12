@@ -14,7 +14,8 @@
 #ifndef __DEBUG_H
 #define __DEBUG_H
 
-#include <Wire.h>
+// #include <Wire.h>
+#include "NeverUseArduino.h"
 
 #define USE_DEBUG 1
 #if USE_DEBUG

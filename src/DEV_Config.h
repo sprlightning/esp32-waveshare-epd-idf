@@ -30,7 +30,8 @@
 #ifndef _DEV_CONFIG_H_
 #define _DEV_CONFIG_H_
 
-#include <Arduino.h>
+// #include <Arduino.h>
+#include "NeverUseArduino.h"
 #include <stdint.h>
 #include <stdio.h>
 
@@ -44,12 +45,25 @@
 /**
  * GPIO config
 **/
+#if defined(USE_GxEPD)
+#ifndef SPI_HOST_TYPE
+// GD's ESP32-L supports hardware VSPI
+#define SPI_HOST_TYPE VSPI_HOST
+#endif
+#define EPD_SCK_PIN  18
+#define EPD_MOSI_PIN 23
+#define EPD_CS_PIN   T7
+#define EPD_RST_PIN  T5
+#define EPD_DC_PIN   T6
+#define EPD_BUSY_PIN T4
+#else
 #define EPD_SCK_PIN  13
 #define EPD_MOSI_PIN 14
 #define EPD_CS_PIN   15
 #define EPD_RST_PIN  26
 #define EPD_DC_PIN   27
 #define EPD_BUSY_PIN 25
+#endif
 
 #define GPIO_PIN_SET   1
 #define GPIO_PIN_RESET 0
