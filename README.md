@@ -75,6 +75,18 @@ void EPD_2in13_V4_Awake(void) {
 }
 ```
 
+## 字体
+
+我在src/Fonts目录中增加了CJK字体，适用于大多数使用场景，可用**Paint_DrawString_CN**函数绘制；
+
+使用STC-ISP的字库生成工具制作，水平扫描，从左到右从上到下，高位在前；
+
+其中**Font12CJK**使用新宋体，12号，常规；点阵宽x高=16x21，字体宽x高=16x16；水平调整0，垂直调整2；
+
+**Font12CJK_B**使用新宋体，12号，粗体；点阵宽x高=16x21，字体宽x高=16x16；水平调整0，垂直调整2；
+
+值得注意的是，字库占用空间较大，可能单个CJK就需要1MB空间，为此可参考我提供的**music_fonts_cjk.txt**按照**stc_isp_char_config.ini**定义的规则生成字库bin文件放在独立的flash中；或者确保ESP32 Flash的factory分区有足够的空间存放字库bin文件，这通常意味着需要4MB及以上的ESP32 Flash；
+
 ## FT6336触摸驱动
 
 与GoodDisplay的2.13寸屏幕配套的FT6336触摸屏驱动详见[mlx-ft6336-drivers](https://github.com/sprlightning/mlx-ft6336-drivers)，同样支持ESP-IDF 5.1.4环境。

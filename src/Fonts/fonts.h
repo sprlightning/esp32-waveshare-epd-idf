@@ -87,6 +87,8 @@ extern sFONT Font8;
 extern cFONT Font12CN;
 extern cFONT Font24CN;
 // extern const unsigned char Font16_Table[];
+extern cFONT Font12CJK; // 点阵16x21，新宋体12号常规
+extern cFONT Font12CJK_B; // 点阵16x21，新宋体12号粗体
 
 #ifdef __cplusplus
 }
