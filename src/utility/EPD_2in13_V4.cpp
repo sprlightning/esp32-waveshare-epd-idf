@@ -368,3 +368,32 @@ void EPD_2in13_V4_Sleep(void)
 	EPD_2in13_V4_SendData(0x01); 
 	DEV_Delay_ms(100);
 }
+
+/******************************************************************************
+function :	Awake EPD from sleep mode
+parameter:
+info     :  This is an example of awake EPD, copy it to your main.cpp as a function
+******************************************************************************/
+// void EPD_2in13_V4_Awake(void) {
+//     Debug("Awake EPD...\r\n");
+    
+//     // reset EPD
+//     DEV_Digital_Write(EPD_RST_PIN, 0);
+//     DEV_Delay_ms(10);
+//     DEV_Digital_Write(EPD_RST_PIN, 1);
+//     DEV_Delay_ms(10);
+    
+//     // reinitialize EPD
+//     EPD_2in13_V4_Init();
+    
+//     // reload image cache(need to define the image cache in your main.cpp as global variable)
+//     if (BlackImage == NULL) {
+//         if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) 
+//         {
+//             Debug("Failed to apply for black memory...\r\n");
+//             while (1);
+//         }
+//     }
+//     Paint_NewImage(BlackImage, EPD_2in13_V4_WIDTH, EPD_2in13_V4_HEIGHT, 270, WHITE);
+//     Paint_SelectImage(BlackImage);
+// }
