@@ -43,7 +43,7 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 开关**USE_GxEPD**控制**是否使用GoodDisplay的ESP32-L开发板**，其默认置1是启用GoodDisplay ESP32-L，如使用微雪的[电子墨水屏无线网络驱动板](https://www.waveshare.net/shop/e-Paper-ESP32-Driver-Board.htm)，需要将开关**USE_GxEPD**置0，否则会影响SPI和墨水屏控制IO的定义。同样的，如果你没有使用上述开发板，使用的是自定义板子，那请修改为实际IO值；
 
-注意到墨水屏在sleep后没法通过初始化唤醒，会停留在“e-Paper busy”，是因为在唤醒需要分4步，先重置-再初始化-再加载图像cache-再创建并选择图像cache，我在EPD_2in13_V4.cpp预留了一个被注释的Awake Function，可根据需要将其复制到main.cpp中来启用；因为唤醒需要处理图像cache，所以需要在main.cpp的全局变量提前定义图像cache。示例如下：
+注意到墨水屏在sleep后没法通过初始化唤醒，会停留在“e-Paper busy”，是因为唤醒需要分4步，先重置-再初始化-再加载图像cache-再创建并选择图像cache，我在EPD_2in13_V4.cpp预留了一个被注释的Awake Function，可根据需要将其复制到main.cpp中来启用；因为唤醒需要处理图像cache，所以需要在main.cpp的全局变量提前定义图像cache。示例如下：
 ```cpp
 /******************************************************************************
 function :	Awake EPD from sleep mode
