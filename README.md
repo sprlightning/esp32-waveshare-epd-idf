@@ -7,7 +7,7 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 我对2025-11月版本的驱动进行了改动，使其适配ESP-IDF 5.1.4环境，并增加了对GoodDisplay ESP32-L的支持；
 
-其中[GoodDisplay](https://www.good-display.cn/)墨水屏驱动的开源地址是：[ESP32epdx](https://github.com/gooddisplayshare/ESP32epdx)，经过对比，二者大部分相似，但GD的内容比微雪的较新；从bug上来说，微雪的驱动相对稳定。
+其中[GoodDisplay](https://www.good-display.cn/)墨水屏驱动的官方开源地址是：[ESP32epdx](https://github.com/gooddisplayshare/ESP32epdx)，IDF适配版的开源地址是：[ESP32epdx-idf](https://github.com/sprlightning/ESP32epdx-idf)，经过对比，微雪和GD的驱动大部分相似，但GD的内容比微雪的较新；从bug上来说，微雪的驱动相对稳定。
 
 我使用的是GoodDisplay的2.13寸触摸屏（GDEY0213B74）和其配套的ESP32-L开发板，在使用GD的[GDEY0213B74驱动](https://github.com/gooddisplayshare/ESP32epdx/tree/main/examples/2-Colors%20(BW)/2.13/GDEY0213B74)时遇到的bug包括无法**正常显示中文字符串**，如“你好abc”会显示成“你  abc”，我仔细对比了两边的驱动，发现微雪的中文字符串驱动比GD多对比了一组数据，也就是截止符，同样对应的字符索引应当+1，这是微雪能正常显示中文字符串的关键点（本仓库已修复此bug）；此外GD驱动的bug还有各种初始化函数调度混乱，存在过多不必要的休眠，还有就是刷新显示的时候黑白屏闪烁的情况相对严重，起初以为是过多的RST导致，但后来排除了这个原因，还是涉及到底层寄存器的操作，暂没深入研究。
 
