@@ -85,7 +85,9 @@ void EPD_2in13_V4_Awake(void) {
 
 **Font12CJK_B**使用新宋体，12号，粗体；点阵宽x高=16x21，字体宽x高=16x16；水平调整0，垂直调整2；
 
-值得注意的是，字库占用空间较大，可能单个CJK就需要1MB空间，为此可参考我提供的**music_fonts_cjk.txt**按照**stc_isp_char_config.ini**定义的规则生成字库bin文件放在独立的flash中；或者确保ESP32 Flash的factory分区有足够的空间存放字库bin文件，这通常意味着需要4MB及以上的ESP32 Flash；
+值得注意的是，字库占用空间较大，可能单个CJK就需要1MB空间，为此可参考我提供的**music_fonts_cjk.txt**按照**stc_isp_char_config.ini**定义的规则生成字库bin文件放在独立的flash中；或者确保ESP32 Flash的factory分区有足够的空间存放带字库的ESP32 Image，这通常意味着需要4MB及以上的ESP32 Flash；
+
+SIC-ISP工具位于extras/Font-tools目录，版本6.96A，来自STC官网；解压后运行，其菜单的工具选项可看到“字库生成工具”。
 
 ## FT6336触摸驱动
 
