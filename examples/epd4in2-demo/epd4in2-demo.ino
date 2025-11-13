@@ -93,7 +93,7 @@ void setup()
       }
     }
     Paint_ClearWindows(150, 80, 150 + Font20.Width * 7, 80 + Font20.Height, WHITE);
-    Paint_DrawTime(150, 80, &sPaint_time, &Font20, WHITE, BLACK);
+    Paint_DrawTime(150, 80, &sPaint_time, &Font20, BLACK, WHITE);
     EPD_4IN2_PartialDisplay(150, 80, 150 + Font20.Width * 7, 80 + Font20.Height, BlackImage);
     DEV_Delay_ms(500);//Analog clock 1s
     num = num - 1;

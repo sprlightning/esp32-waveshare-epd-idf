@@ -168,7 +168,7 @@ void setup()
         
         Paint_Clear(WHITE);
 		Paint_DrawRectangle(1, 1, 120, 50, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-        Paint_DrawTime(10, 15, &sPaint_time, &Font20, WHITE, BLACK);
+        Paint_DrawTime(10, 15, &sPaint_time, &Font20, BLACK, WHITE);
 
         num = num - 1;
         if(num == 0) {

@@ -98,7 +98,7 @@ void setup() {
         }
     
         Paint_ClearWindows(180, 100, 296, 152, WHITE);
-        Paint_DrawTime(180, 110, &sPaint_time, &Font20, WHITE, BLACK);
+        Paint_DrawTime(180, 110, &sPaint_time, &Font20, BLACK, WHITE);
 
         num = num - 1;
         if(num == 0) {

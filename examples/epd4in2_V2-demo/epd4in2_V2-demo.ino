@@ -107,7 +107,7 @@ void setup()
 		}
 		Paint_Clear(WHITE);
 		Paint_DrawRectangle(1, 1, 120, 50, BLACK, DOT_PIXEL_1X1, DRAW_FILL_EMPTY);
-        Paint_DrawTime(10, 15, &sPaint_time, &Font20, WHITE, BLACK);
+        Paint_DrawTime(10, 15, &sPaint_time, &Font20, BLACK, WHITE);
 		EPD_4IN2_V2_PartialDisplay(BlackImage, 200, 80, 320, 130);
 		DEV_Delay_ms(500);//Analog clock 1s
 		num = num - 1;

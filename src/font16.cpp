@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    font16.c
+  * @file    font16.cpp
   * @author  MCD Application Team
   * @version V1.0.0
   * @date    18-February-2014

@@ -108,7 +108,7 @@ void setup()
             }
         }
         Paint_ClearWindows(0, 0, Font20.Width * 7, Font20.Height, WHITE);
-        Paint_DrawTime(0, 0, &sPaint_time, &Font20, WHITE, BLACK);
+        Paint_DrawTime(0, 0, &sPaint_time, &Font20, BLACK, WHITE);
 
         num = num - 1;
         if(num == 0) {

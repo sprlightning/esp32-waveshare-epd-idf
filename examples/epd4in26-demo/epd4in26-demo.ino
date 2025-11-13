@@ -94,7 +94,7 @@ void setup()
 			}
 		}
 		Paint_Clear(WHITE);
-		Paint_DrawTime(20, 10, &sPaint_time, &Font20, WHITE, BLACK);
+		Paint_DrawTime(20, 10, &sPaint_time, &Font20, BLACK, WHITE);
 		EPD_4in26_Display_Part(BlackImage, 80, 200, 200, 50);
 		DEV_Delay_ms(500);//Analog clock 1s
 		num = num - 1;
