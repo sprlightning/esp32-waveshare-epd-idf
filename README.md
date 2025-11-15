@@ -13,6 +13,8 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 微雪显示时钟是调用函数**Paint_DrawTime**，其本质是将输入的时间转化为字符串存入一个简单的时钟数据结构，然后将时钟数据结构的内容通过英文字符串显示函数在局部进行更新；而GD驱动的一个好处是其有一个新增的时钟函数**EPD_Dis_Part_Time**，其通过调用新增的**EPD_Dis_Part_RAM**在局部刷新写入数据，可以非常流畅且连贯的更新时钟显示，时钟显示期间屏幕稳定且不闪烁，但是我仔细分析这个函数，发现它其实是预定义了一组数字的Image data，传入的数字会转化为Image data，本质上是在局部更新Image。而这个Image data存在于GD的Image.h头文件，本来想将GD的时钟函数移植到微雪的，但发现其显示的尺寸有点奇怪，试图显示较小的时钟尺寸时会发生字符错位，这种尺寸不通用的情况使我放弃了这个移植计划。当然这也表明了一件事，图片data的刷新可以做到屏幕不闪烁。但是这不是根本问题，我注意到同样的屏幕，微雪驱动在更新字符的时候却可以做到屏幕不闪烁，这是GD的驱动的bug之一，局部更新字符会出现屏幕黑白交替闪烁。
 
+后来发现局刷可以实现不闪烁；对于EPD_2IN7_V2.cpp，我修复了EPD_2IN7_V2_Display_Partial的坐标错误，修正后的坐标原点为左上角，水平方向是X轴，垂直方向是Y轴，和其余接口函数保持一致；此外新增了采用局刷方式实现的全刷函数EPD_2IN7_V2_Display_Partial_All，可以适用于大多数快速更新的场景；
+
 此外之前试图使用[GxEPD2](https://github.com/ZinggJM/GxEPD2)，这是个同时集成了GoodDisplay和微雪电子的ePaper驱动库，可是其高度依赖一个Arduino图形库GFX，那个GFX图形库移植较复杂，而我因为某些原因只能使用纯ESP-IDF环境开发，这使我放弃了这个GxEPD2驱动库。
 
 ## 基本使用
@@ -29,7 +31,7 @@ Use waveshare's ePaper drivers on ESP-IDF.
 
 ### Step 2
 
-参考下面的E-Paper 程序对应参考表，根据你的屏幕修改esp32-waveshare-epd-idf的CMakeLists.txt的**EPD_DEMO_PATH**，默认使用的是"examples/epd2in13_V4-demo"，其同样适用于GoodDisplay的2.13寸触摸屏（GDEY0213B74）；
+参考下面的E-Paper 程序对应参考表，根据你的屏幕修改esp32-waveshare-epd-idf的CMakeLists.txt的**EPD_DEMO_PATH**，默认使用的是"examples/epd2in7_V2-demo"，其同样适用于GoodDisplay的2.7寸触摸屏（GDEY027T91-FT11）；
 
 ### Step 3
 
