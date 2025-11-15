@@ -1,6 +1,6 @@
 /*****************************************************************************
 * | File      	:   EPD_2in7_V2.cpp
-* | Author      :   Waveshare team、MLX
+* | Author      :   Waveshare team; MLX
 * | Function    :   2.7inch V2 e-paper
 * | Info        :
 *----------------

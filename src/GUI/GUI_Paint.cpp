@@ -1,6 +1,6 @@
 /******************************************************************************
 * | File      	:   GUI_Paint.c
-* | Author      :   Waveshare electronics
+* | Author      :   Waveshare electronics; MLX
 * | Function    :	Achieve drawing: draw points, lines, boxes, circles and
 *                   their size, solid dotted line, solid rectangle hollow
 *                   rectangle, solid circle hollow circle.
@@ -9,7 +9,7 @@
 *   Achieve time display: adaptive size display time minutes and seconds
 *----------------
 * |	This version:   V3.2
-* | Date        :   2020-07-23
+* | Date        :   2025-11-15
 * | Info        :
 * -----------------------------------------------------------------------------
 * V3.2(2020-07-23):
