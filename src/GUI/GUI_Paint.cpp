@@ -92,6 +92,7 @@ parameter:
     width   :   The width of the picture
     Height  :   The height of the picture
     Color   :   Whether the picture is inverted
+note        :   相当于新建图层/容器
 ******************************************************************************/
 void Paint_NewImage(UBYTE *image, UWORD Width, UWORD Height, UWORD Rotate, UWORD Color)
 {
@@ -123,6 +124,7 @@ void Paint_NewImage(UBYTE *image, UWORD Width, UWORD Height, UWORD Rotate, UWORD
 function: Select Image
 parameter:
     image : Pointer to the image cache
+note      : 选择用来绘制内容的图层/容器
 ******************************************************************************/
 void Paint_SelectImage(UBYTE *image)
 {
@@ -161,6 +163,12 @@ void Paint_SetMirroring(UBYTE mirror)
     }    
 }
 
+/******************************************************************************
+function:	Set Scale
+parameter:
+    sacle   : 2/4/7
+note        : 设置绘制缩放比例，仅支持2/4/7
+******************************************************************************/
 void Paint_SetScale(UBYTE scale)
 {
     if(scale == 2){
@@ -180,6 +188,7 @@ void Paint_SetScale(UBYTE scale)
         Debug("Scale Only support: 2 4 7\r\n");
     }
 }
+
 /******************************************************************************
 function: Draw Pixels
 parameter:
