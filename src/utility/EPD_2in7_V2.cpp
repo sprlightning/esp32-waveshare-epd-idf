@@ -110,6 +110,48 @@ static void EPD_2IN7_V2_ReadBusy(void)
 }
 
 /******************************************************************************
+function :	Setting the display window
+parameter:
+	Xstart : X-axis starting position
+	Ystart : Y-axis starting position
+	Xend : End position of X-axis
+	Yend : End position of Y-axis
+note: 这是原始坐标系，x为垂直方向，y为水平方向
+******************************************************************************/
+static void EPD_2IN7_V2_SetWindows(UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
+{
+    // 设置RAM X地址范围（垂直方向）
+    EPD_2IN7_V2_SendCommand(0x44); // SET_RAM_X_ADDRESS_START_END_POSITION
+    EPD_2IN7_V2_SendData((Xstart>>3) & 0xFF);
+    EPD_2IN7_V2_SendData((Xend>>3) & 0xFF);
+	
+    // 设置RAM Y地址范围（水平方向）
+    EPD_2IN7_V2_SendCommand(0x45); // SET_RAM_Y_ADDRESS_START_END_POSITION
+    EPD_2IN7_V2_SendData(Ystart & 0xFF);
+    EPD_2IN7_V2_SendData((Ystart >> 8) & 0xFF);
+    EPD_2IN7_V2_SendData(Yend & 0xFF);
+    EPD_2IN7_V2_SendData((Yend >> 8) & 0xFF);
+}
+
+/******************************************************************************
+function :	Set Cursor
+parameter:
+	Xstart : X-axis starting position
+	Ystart : Y-axis starting position
+******************************************************************************/
+static void EPD_2IN7_V2_SetCursor(UWORD Xstart, UWORD Ystart)
+{
+    // 设置RAM X地址计数器
+    EPD_2IN7_V2_SendCommand(0x4E); // SET_RAM_X_ADDRESS_COUNTER
+    EPD_2IN7_V2_SendData(Xstart & 0xFF);
+
+    // 设置RAM Y地址计数器
+    EPD_2IN7_V2_SendCommand(0x4F); // SET_RAM_Y_ADDRESS_COUNTER
+    EPD_2IN7_V2_SendData(Ystart & 0xFF);
+    EPD_2IN7_V2_SendData((Ystart >> 8) & 0xFF);
+}
+
+/******************************************************************************
 function :	Turn on display
 parameter:
 ******************************************************************************/
@@ -307,6 +349,7 @@ void EPD_2IN7_V2_Clear(void)
 /******************************************************************************
 function :	Sends the image buffer in RAM to e-Paper and displays
 parameter:
+	Image : Image data
 ******************************************************************************/
 void EPD_2IN7_V2_Display(UBYTE *Image)
 {
@@ -339,6 +382,12 @@ void EPD_2IN7_V2_Display_Fast(UBYTE *Image)
 	EPD_2IN7_V2_TurnOnDisplay_Fast();
 }
 
+/******************************************************************************
+function :	Refresh a base image
+parameter:
+	Image : Image data	
+note      : 全屏刷新，较慢，刷新时屏幕会黑白屏闪烁
+******************************************************************************/
 void EPD_2IN7_V2_Display_Base(UBYTE *Image)
 {
     UWORD Width, Height;
@@ -360,6 +409,14 @@ void EPD_2IN7_V2_Display_Base(UBYTE *Image)
 	EPD_2IN7_V2_TurnOnDisplay();	
 }
 
+/******************************************************************************
+function :	Refresh the background color
+parameter:
+	color : Color to refresh the background
+note      : If you didn't use the EPD_2IN7_V2_Display_Base() function to refresh the image before,
+            use the EPD_2IN7_V2_Display_Base_color() function to refresh the background color,
+            otherwise the background color will be garbled.
+******************************************************************************/
 void EPD_2IN7_V2_Display_Base_color(UBYTE color)
 {
     UWORD Width, Height;
@@ -381,8 +438,26 @@ void EPD_2IN7_V2_Display_Base_color(UBYTE color)
 	// EPD_2IN7_V2_TurnOnDisplay();	
 }
 
+/******************************************************************************
+function :	Sends the image buffer in RAM to e-Paper and partial refresh
+parameter:
+	Image : Image data
+    Xstart : Start X coordinate
+    Ystart : Start Y coordinate
+    Xend   : End X coordinate
+    Yend   : End Y coordinate
+note      : 依据输入的范围局部刷新，速度快，刷新时不闪烁
+******************************************************************************/
 void EPD_2IN7_V2_Display_Partial(const UBYTE *Image, UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yend)
 {
+    // 坐标转换（希望传入的是原点在左上角，x水平，y垂直），下面的原始坐标是原点右上角，y水平，x垂直
+    UWORD tempXstart = Xstart, tempXend = Xend;
+    Xstart = Ystart; // 新的Ystart对应原坐标的Xstart
+    Xend = Yend;     // 新的Yend对应原坐标的Xend
+    Ystart = EPD_2IN7_V2_HEIGHT - tempXend; // 新Xend转化为原坐标的Ystart（水平反转）
+    Yend = EPD_2IN7_V2_HEIGHT - tempXstart; // 新Xstart转化为原坐标的Yend（水平反转）
+
+    // X参数（垂直方向）处理，需为8的倍数，转换为字节数
     if((Xstart % 8 + Xend % 8 == 8 && Xstart % 8 > Xend % 8) || Xstart % 8 + Xend % 8 == 0 || (Xend - Xstart)%8 == 0)
     {
         Xstart = Xstart / 8 ;
@@ -396,41 +471,101 @@ void EPD_2IN7_V2_Display_Partial(const UBYTE *Image, UWORD Xstart, UWORD Ystart,
     
 
     UWORD i, Width;
+    // 计算区域尺寸和数据长度
 	Width = Xend -  Xstart;
-	UWORD IMAGE_COUNTER = Width * (Yend-Ystart);
+	UWORD IMAGE_COUNTER = Width * (Yend-Ystart); // 确保Y方向长度为正
 
+    // 调整结束地址（调整为闭区间）
 	Xend -= 1;
 	Yend -= 1;	
+
     //Reset
     EPD_2IN7_V2_Reset();
 
+    // 设置边框波形
     EPD_2IN7_V2_SendCommand(0x3C); //BorderWavefrom
     EPD_2IN7_V2_SendData(0x80);	
-    //	
+    
+    // 设置RAM X地址范围（垂直方向）
     EPD_2IN7_V2_SendCommand(0x44);       // set RAM x address start/end, in page 35
     EPD_2IN7_V2_SendData(Xstart & 0xff);    // RAM x address start at 00h;
     EPD_2IN7_V2_SendData(Xend & 0xff);    // RAM x address end at 0fh(15+1)*8->128 
+
+    // 设置RAM Y地址范围（水平方向）
     EPD_2IN7_V2_SendCommand(0x45);       // set RAM y address start/end, in page 35
     EPD_2IN7_V2_SendData(Ystart & 0xff);    // RAM y address start at 0127h;
     EPD_2IN7_V2_SendData((Ystart>>8) & 0x01);    // RAM y address start at 0127h;
     EPD_2IN7_V2_SendData(Yend & 0xff);    // RAM y address end at 00h;
     EPD_2IN7_V2_SendData((Yend>>8) & 0x01); 
 
+    // 设置RAM X地址计数器
     EPD_2IN7_V2_SendCommand(0x4E);   // set RAM x address count to 0;
     EPD_2IN7_V2_SendData(Xstart & 0xff); 
+
+    // 设置RAM Y地址计数器
     EPD_2IN7_V2_SendCommand(0x4F);   // set RAM y address count to 0X127;    
     EPD_2IN7_V2_SendData(Ystart & 0xff);
     EPD_2IN7_V2_SendData((Ystart>>8) & 0x01);
 
-
+    // 发送图像数据
     EPD_2IN7_V2_SendCommand(0x24);   //Write Black and White image to RAM
     for (i = 0; i < IMAGE_COUNTER; i++) {
 	    EPD_2IN7_V2_SendData(Image[i]);
 	}
+
+    // 执行局部刷新
 	EPD_2IN7_V2_TurnOnDisplay_Partial();
 }
 
+/******************************************************************************
+function :	Full screen partial update display
+parameter:
+	Image : Image data
+note      : 采用局部刷新方法的全屏刷新，速度快，刷新时不闪烁
+******************************************************************************/
+void EPD_2IN7_V2_Display_Partial_All(UBYTE *Image)
+{
+	UWORD Width, Height;
+    Width = (EPD_2IN7_V2_WIDTH % 8 == 0)? (EPD_2IN7_V2_WIDTH / 8 ): (EPD_2IN7_V2_WIDTH / 8 + 1);
+    Height = EPD_2IN7_V2_HEIGHT;
+	
+	//Reset
+    DEV_Digital_Write(EPD_RST_PIN, 0);
+    DEV_Delay_ms(1);
+    DEV_Digital_Write(EPD_RST_PIN, 1);
 
+	EPD_2IN7_V2_SendCommand(0x3C); //BorderWavefrom
+	EPD_2IN7_V2_SendData(0x80);	
+
+    // // 控制高度（水平方向）（非必须）
+	// EPD_2IN7_V2_SendCommand(0x01); //Driver output control      
+    // EPD_2IN7_V2_SendData((EPD_2IN7_V2_HEIGHT-1) & 0xff);
+    // EPD_2IN7_V2_SendData(((EPD_2IN7_V2_HEIGHT-1) >> 8) & 0x01);
+	// EPD_2IN7_V2_SendData(0x00);
+	
+    // // 配置数据输入模式（非必须）
+	// EPD_2IN7_V2_SendCommand(0x11); //data entry mode       
+	// EPD_2IN7_V2_SendData(0x03); // waveshare（正常）
+    // // EPD_2IN7_V2_SendData(0x02); // GoodDisplay（花屏）
+
+    // // 设置显示窗口和初始值位置（使用全屏作为显示窗口）（非必须）
+	// EPD_2IN7_V2_SetWindows(0, 0, EPD_2IN7_V2_WIDTH - 1, EPD_2IN7_V2_HEIGHT - 1);
+	// EPD_2IN7_V2_SetCursor(0, 0);
+
+	EPD_2IN7_V2_SendCommand(0x24);   //Write Black and White image to RAM
+    for (UWORD i = 0; i < Width * Height; i++) {
+	    EPD_2IN7_V2_SendData(Image[i]);
+	}
+
+	EPD_2IN7_V2_TurnOnDisplay_Partial();
+}
+
+/******************************************************************************
+function :	Show image in 4 gray Levels
+parameter:
+	Image : Image data
+note      : 4级灰度显示
+******************************************************************************/
 void EPD_2IN7_V2_4GrayDisplay(UBYTE *Image)
 {
     UDOUBLE i,j,k;
@@ -521,6 +656,36 @@ parameter:
 ******************************************************************************/
 void EPD_2IN7_V2_Sleep(void)
 {
-    EPD_2IN7_V2_SendCommand(0X10);
+    EPD_2IN7_V2_SendCommand(0X10); //enter deep sleep
     EPD_2IN7_V2_SendData(0x01);
+    // DEV_Delay_ms(100); // not necessary
 }
+
+/******************************************************************************
+function :	Awake EPD from sleep mode
+parameter:
+info     :  This is an example of awake EPD, copy it to your main.cpp as a function
+******************************************************************************/
+// void EPD_2IN7_V2_Awake(void) {
+//     Debug("Awake EPD...\r\n");
+    
+//     // reset EPD
+//     DEV_Digital_Write(EPD_RST_PIN, 0);
+//     DEV_Delay_ms(10);
+//     DEV_Digital_Write(EPD_RST_PIN, 1);
+//     DEV_Delay_ms(10);
+    
+//     // reinitialize EPD
+//     EPD_2IN7_V2_Init();
+    
+//     // reload image cache(need to define the image cache in your main.cpp as global variable)
+//     if (BlackImage == NULL) {
+//         if((BlackImage = (UBYTE *)malloc(Imagesize)) == NULL) 
+//         {
+//             Debug("Failed to apply for black memory...\r\n");
+//             while (1);
+//         }
+//     }
+//     Paint_NewImage(BlackImage, EPD_2IN7_V2_WIDTH, EPD_2IN7_V2_HEIGHT, 270, WHITE);
+//     Paint_SelectImage(BlackImage);
+// }

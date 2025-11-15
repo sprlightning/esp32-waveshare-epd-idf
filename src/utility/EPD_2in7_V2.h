@@ -46,6 +46,7 @@ void EPD_2IN7_V2_Display_Fast(UBYTE *Image);
 void EPD_2IN7_V2_Display_Base(UBYTE *Image);
 void EPD_2IN7_V2_Display_Base_color(UBYTE color);
 void EPD_2IN7_V2_Display_Partial(const UBYTE *Image, UWORD Xstart, UWORD Ystart, UWORD Xend, UWORD Yende);
+void EPD_2IN7_V2_Display_Partial_All(UBYTE *Image);
 void EPD_2IN7_V2_4GrayDisplay(UBYTE *Image);
 void EPD_2IN7_V2_Sleep(void);
 

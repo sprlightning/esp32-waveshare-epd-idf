@@ -2,7 +2,7 @@
 # -- author MLX
 # -- copyright GPLv3
 
-set(EPD_DEMO_PATH "examples/epd2in13_V4-demo")
+set(EPD_DEMO_PATH "examples/epd2in7_V2-demo")
 
 idf_component_register(
     SRC_DIRS src src/utility src/GUI src/Fonts ${EPD_DEMO_PATH}
